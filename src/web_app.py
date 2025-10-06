@@ -23,12 +23,14 @@ def predict():
     if 'file' not in request.files:
         return jsonify({'error': 'no file uploaded'}), 400
     f = request.files['file']
-    df = pd.read_csv(f, header=None, names=['x','y','z'])
+    # Read CSV with header, keep only x, y, z columns
+    df = pd.read_csv(f)
+    df = df[['x', 'y', 'z']]
+    df[['x', 'y', 'z']] = df[['x', 'y', 'z']].apply(pd.to_numeric, errors='coerce')
     df['magnitude'] = np.sqrt(df.x**2 + df.y**2 + df.z**2)
     X = df[['x','y','z','magnitude']].values
     feats = extract_stat_features(np.expand_dims(X, axis=0))
     pred = int(model.predict(feats)[0])
     return jsonify({'label': pred, 'label_name': LABEL_MAP.get(pred)}), 200
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
