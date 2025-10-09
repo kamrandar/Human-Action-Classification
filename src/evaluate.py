@@ -1,10 +1,10 @@
 import joblib
 from pathlib import Path
 from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
 from load_data import load_all_csv
 from preprocess import add_magnitude, scale_per_participant
 from segmentation import sliding_window_per_participant
@@ -35,6 +35,21 @@ def evaluate(model_path, data_folder, out_reports_folder):
     print("Evaluating...")
     y_pred = clf.predict(X_feat)
     print(classification_report(y, y_pred))
+
+
+
+    # Add after classification_report in evaluate function:
+    precision, recall, f1, support = precision_recall_fscore_support(y, y_pred, labels=range(1,8))
+    metrics_df = pd.DataFrame({
+        'Label': range(1,8),
+        'Precision': precision,
+        'Recall': recall,
+        'F1-Score': f1,
+        'Support': support
+    })
+    print("\nDetailed per-class metrics:")
+    print(metrics_df)
+    metrics_df.to_csv(Path(out_reports_folder) / 'detailed_metrics.csv', index=False)
 
     cm = confusion_matrix(y, y_pred, labels=range(1, 8))  # Focus on labels 1 to 7
     plt.figure(figsize=(8, 6))

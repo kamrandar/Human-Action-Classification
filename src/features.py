@@ -31,7 +31,11 @@ def extract_stat_features(X_windowed, fs=52.0):
                 float(np.mean(data)), float(np.std(data)), float(np.min(data)), float(np.max(data)),
                 float(np.median(data)), float(iqr(data)), float(zero_crossings(data)),
                 float(np.sum(data**2)/len(data) if len(data)>0 else 0.0),
-                float(dominant_freq(data, fs=fs))
+                float(dominant_freq(data, fs=fs)),
+                float(np.mean(np.abs(np.diff(data)))),  # Mean absolute difference
+                float(np.sum(np.abs(data) > np.std(data))),  # Number of points above 1 std
+                float(np.percentile(data, 90) - np.percentile(data, 10)),  # 90-10 percentile range
+                float(np.correlate(data, data, mode='valid')[0]) # Autocorrelation
             ])
         feats.append(f)
     return np.array(feats)

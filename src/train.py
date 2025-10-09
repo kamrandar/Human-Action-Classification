@@ -1,5 +1,6 @@
 import joblib
 import numpy as np
+from sklearn.model_selection import GridSearchCV
 from imblearn.over_sampling import SMOTE
 from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
@@ -44,9 +45,20 @@ def run_training(data_folder, out_models_folder, out_reports_folder):
     # Split the resampled data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42, stratify=y_resampled)
 
-    print("Training RandomForest...")
-    clf = RandomForestClassifier(n_estimators=200, random_state=42, n_jobs=-1)
+    print("Training with hyperparameter tuning...")
+    param_grid = {
+        'n_estimators': [100, 200, 300],
+        'max_depth': [None, 10, 20],
+        'min_samples_split': [2, 5, 10]
+    }
+    clf = GridSearchCV(
+        RandomForestClassifier(random_state=42, n_jobs=-1),
+        param_grid,
+        cv=3,
+        scoring='f1_weighted'
+    )
     clf.fit(X_train, y_train)
+    print("Best parameters:", clf.best_params_)
 
     print("Evaluating...")
     y_pred = clf.predict(X_test)
