@@ -36,12 +36,12 @@ def evaluate(model_path, data_folder, out_reports_folder):
     y_pred = clf.predict(X_feat)
     print(classification_report(y, y_pred))
 
-    cm = confusion_matrix(y, y_pred)
+    cm = confusion_matrix(y, y_pred, labels=range(1, 8))  # Focus on labels 1 to 7
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d')
+    sns.heatmap(cm, annot=True, fmt='d', xticklabels=range(1, 8), yticklabels=range(1, 8))
     plt.xlabel('Predicted')
     plt.ylabel('True')
-    plt.title('Confusion matrix')
+    plt.title('Confusion matrix (Labels 1 to 7)')
     cm_path = Path(out_reports_folder) / 'confusion_matrix_eval.png'
     plt.savefig(cm_path, bbox_inches='tight')
     plt.close()
