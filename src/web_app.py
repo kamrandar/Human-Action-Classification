@@ -5,7 +5,7 @@ import numpy as np
 from features import extract_stat_features
 
 app = Flask(__name__)
-obj = joblib.load('models/rf_baseline.joblib')
+obj = joblib.load('models/Final_model.joblib')
 model = obj['model']
 
 LABEL_MAP = {

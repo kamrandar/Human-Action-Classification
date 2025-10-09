@@ -1,7 +1,7 @@
 ﻿venv/
 __pycache__/
 *.pyc
-models/*.joblib
+models/*.pkl
 .env
 .vscode/
 .idea/

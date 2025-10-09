@@ -17,7 +17,7 @@ LABEL_MAP = {
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument('--input_csv', type=str, help='CSV file with columns x,y,z (no header). Provide ~104 rows for a 2s window.')
-    p.add_argument('--model', type=str, default='models/rf_baseline.joblib')
+    p.add_argument('--model', type=str, default='models/Final_model.joblib')
     return p.parse_args()
 
 if __name__ == '__main__':
